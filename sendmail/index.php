@@ -1,7 +1,8 @@
 <?php
-
 print("line:".__FILE__."line:".__LINE__."</br>");
 set_time_limit(0);
+ini_set("display_errors", "On");
+error_reporting(E_ALL | E_STRICT);
 print("line:".__FILE__."line:".__LINE__."</br>");
 date_default_timezone_set('PRC');
 print("line:".__FILE__."line:".__LINE__."</br>");
