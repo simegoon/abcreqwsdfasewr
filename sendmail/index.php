@@ -1,38 +1,25 @@
 <?php
-print("line:".__FILE__."line:".__LINE__."</br>");
+
 set_time_limit(0);
-ini_set("display_errors", "On");
-error_reporting(E_ALL | E_STRICT);
-print("line:".__FILE__."line:".__LINE__."</br>");
 date_default_timezone_set('PRC');
-print("line:".__FILE__."line:".__LINE__."</br>");
 header("Content-type:text/html;charset=utf-8");
 
 include("config.php");
-print("line:".__FILE__."line:".__LINE__."</br>");
+
 include(COREPATH."db/pdo_sql_api.php");
-print("line:".__FILE__."line:".__LINE__."</br>");
 include(COREPATH."db/firebase.php");
-print("line:".__FILE__."line:".__LINE__."</br>");
 include(COREPATH."smtp.php");
-print("line:".__FILE__."line:".__LINE__."</br>");
 include(COREPATH."sematext.log.php");
-print("line:".__FILE__."line:".__LINE__."</br>");
 
 $log = new SematextLog("831a6914-98a7-4915-87a5-25b12cedaa9f");
-print("line:".__FILE__."line:".__LINE__."</br>");
 $db = new FirebaseHigh("https://mygood-ea08e.firebaseio.com/",true);
-print("line:".__FILE__."line:".__LINE__."</br>");
 
 $dbApi = new CPdosqlApi();
-print("line:".__FILE__."line:".__LINE__."</br>");
 $dbApi->debug = true;
 
-print("line:".__FILE__."line:".__LINE__."</br>");
 // 每个账户一小时发一次，防止进入垃圾名单
 $send = new SendfTable();
 
-print("line:".__FILE__."line:".__LINE__."</br>");
 if(isset($_GET["to"])){
 	if(!$db->getOne($send,false,1))
 	{
@@ -45,10 +32,8 @@ else{
 		die("No sender!");
 	}
 }
-print("line:".__FILE__."line:".__LINE__."</br>");
 var_dump($send);
 
-print("line:".__FILE__."line:".__LINE__."</br>");
 $to = new SendtTable();
 if(!$db->getOne($to))
 {

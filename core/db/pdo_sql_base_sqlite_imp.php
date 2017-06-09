@@ -8,9 +8,7 @@ class CPdosqlBase
 	private $conn;
 	function __construct($sqlite_name=SQLITE_NAME)
 	{
-print("line:".__FILE__."line:".__LINE__."</br>");
 		$this->conn = new SQLite3($sqlite_name);
-print("line:".__FILE__."line:".__LINE__."</br>");
 		/*
 		mysqli_query($this->conn,"SET NAMES 'utf8'");
 		mysqli_query($this->conn,"SET CHARACTER SET utf8");
