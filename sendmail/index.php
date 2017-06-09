@@ -1,37 +1,37 @@
 <?php
 
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 set_time_limit(0);
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 date_default_timezone_set('PRC');
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 header("Content-type:text/html;charset=utf-8");
 
 include("config.php");
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 include(COREPATH."db/pdo_sql_api.php");
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 include(COREPATH."db/firebase.php");
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 include(COREPATH."smtp.php");
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 include(COREPATH."sematext.log.php");
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 
 $log = new SematextLog("831a6914-98a7-4915-87a5-25b12cedaa9f");
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 $db = new FirebaseHigh("https://mygood-ea08e.firebaseio.com/",true);
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 
 $dbApi = new CPdosqlApi();
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 $dbApi->debug = true;
 
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 // 每个账户一小时发一次，防止进入垃圾名单
 $send = new SendfTable();
 
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 if(isset($_GET["to"])){
 	if(!$db->getOne($send,false,1))
 	{
@@ -44,10 +44,10 @@ else{
 		die("No sender!");
 	}
 }
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 var_dump($send);
 
-var_dump("OK");
+print("line:".__FILE__."line:".__LINE__."</br>");
 $to = new SendtTable();
 if(!$db->getOne($to))
 {

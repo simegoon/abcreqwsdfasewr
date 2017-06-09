@@ -3,9 +3,10 @@
 程序使用的数据操作类，屏蔽本地数据库和远程数据库操作类的差异，仅需指定数据库所在url即可
 同时支持一些具化的接口，如insert、update、delete，这些接口会自动去拼接sql语句，并调用query方法
 ****/
-
+print("line:".__FILE__."line:".__LINE__."</br>");
 include_once("pdo_sql_base.php");
 
+print("line:".__FILE__."line:".__LINE__."</br>");
 class CPdosqlApi
 {
 	// 仅仅指域名部分
@@ -23,8 +24,11 @@ class CPdosqlApi
 		if($url) // 远程数据库
 			$this->url = $url;
 		else{ // 本地数据库
+print("line:".__FILE__."line:".__LINE__."</br>");
 			$this->url = self::get_http_host();
+print("line:".__FILE__."line:".__LINE__."</br>");
 			$this->pdo_sql = new CPdosqlBase();
+print("line:".__FILE__."line:".__LINE__."</br>");
 		}
 		if($path != "" && strpos($path, "/") != 0)
 			$this->path = "/".$path;
