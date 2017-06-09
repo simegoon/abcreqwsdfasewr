@@ -1,7 +1,10 @@
 <?php
 
+var_dump("OK");
 set_time_limit(0);
+var_dump("OK");
 date_default_timezone_set('PRC');
+var_dump("OK");
 header("Content-type:text/html;charset=utf-8");
 
 include("config.php");
