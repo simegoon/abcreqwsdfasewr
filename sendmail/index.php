@@ -20,6 +20,7 @@ $dbApi->debug = true;
 // 每个账户一小时发一次，防止进入垃圾名单
 $send = new SendfTable();
 
+
 if(isset($_GET["to"])){
 	if(!$db->getOne($send,false,1))
 	{
@@ -27,8 +28,10 @@ if(isset($_GET["to"])){
 	}
 }
 else{
+	$db->lock();
 	if(!$db->getOne($send))
 	{
+		$db->unlock();
 		die("No sender!");
 	}
 }
@@ -37,11 +40,16 @@ var_dump($send);
 $to = new SendtTable();
 if(!$db->getOne($to))
 {
+	$db->unlock();
 	die("No receiver!");
 }
 if(!isset($_GET["to"])){
+	$db->LockUpdateTimes($send);
 	$db->LockRecode($to);
 }
+
+$db->unlock();
+
 var_dump($to);
 
 

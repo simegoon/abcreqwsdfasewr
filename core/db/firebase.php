@@ -4,10 +4,14 @@ class Firebase {
     protected $root_url;
     protected $curl;
     protected $debug;
+    private $id;
+    private $isLock;
     public function __construct($url,$debug=false)
     {
         $this->root_url = $url;
         $this->debug = $debug;
+        $this->id = time()%10000*1000+rand(1,1000);
+        $this->isLock = false;
     }
     public function init(){
         $this->curl=curl_init();
@@ -21,13 +25,55 @@ class Firebase {
 	function __destruct(){
 	}
 	// 全局分布式互斥锁
+	/*******************************
+      "lock":{
+        ".validate": "(data.child('owner').val() === newData.child('owner').val()
+        || (data.child('time').val() + data.child('outtime').val()<now)
+        || (data.child('isLock').val() === 0 && newData.child('isLock').val() === 1))
+        && newData.hasChildren(['owner', 'time' , 'outtime','isLock'])
+        && newData.child('time').isNumber()
+        && newData.child('outtime').isNumber()
+        && newData.child('isLock').isNumber()
+        && (newData.child('isLock').val() === 0 || newData.child('isLock').val() === 1 )"
+      }
+    *******************************/
 	public function lock()
 	{
-		
+		$data = array("outtime"=>5*60*1000,
+			"time"=>array(".sv"=> "timestamp"),
+			"owner"=>$this->id,
+			"isLock"=>1
+		);
+		$debug = $this->debug;
+		$this->debug = false;
+		while(true){
+			$ret = $this->overwrite("test",$data,"lock");
+			if($ret["code"] == 200 ){
+				if($debug){
+					var_dump($ret["html"]);
+				}
+				break;
+				
+			}
+			sleep(1);
+		}
+		$this->debug = $debug;
+        $this->isLock = true;
 	}
 	public function unlock()
 	{
-		
+		if(!$this->isLock)
+		return true;
+		$data = array("outtime"=>5*60*1000,
+			"time"=>array(".sv"=> "timestamp"),
+			"owner"=>$this->id,
+			"isLock"=>0
+		);
+		$ret = $this->overwrite("test",$data,"lock");
+		if($ret["code"] == 200 )
+        	$this->isLock = false;
+			return true;
+		return false;
 	}
 	public function updaterule()
 	{
@@ -193,6 +239,7 @@ class FirebaseHigh extends Firebase
 	       "orderBy"=>'"query_times"');
 		return $this->select($table,http_build_query($param));
     }
+    // 如果是指定querytimes的，time_out指的是超时时间，否则是指一条记录的操作间隔
 	public function getOne($data,$query_times=false,$time_out=3600)
 	{
 		// 设置查询参数
@@ -216,6 +263,11 @@ class FirebaseHigh extends Firebase
 	// 仅更新操作时间
 	public function UpdateTimes($data){
 		$data->set("times",time());
+		return $this->update($data->table(),$data->data(),$data->unique());
+	}
+	// 仅更新操作时间
+	public function LockUpdateTimes($data,$timeout=300,$timespan=3600){
+		$data->set("times",time()-$timespan+$timeout);
 		return $this->update($data->table(),$data->data(),$data->unique());
 	}
 	// 更新操作时间并设置querys
